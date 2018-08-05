@@ -7,7 +7,7 @@ img {
   background: url('./img/showcase.jpg') no-repeat;
   background-size: cover;
   background-position: center;
-  height: 100vh;
+  height: 90vh;
   margin-top: -24px;
   margin-bottom: -50px;
 }
@@ -40,5 +40,9 @@ img {
 
 .footer {
   position: absolute;
+  bottom: 0;
   width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
 }

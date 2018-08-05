@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+
 class Login extends Component {
 
 
@@ -27,10 +28,12 @@ class Login extends Component {
 
         axios.post('/users/login', {email: this.state.email, password: this.state.password})
         .then(res => console.log(res))
-        .catch(err => console.log(err));
+        .catch(err => this.setState({errors: err.res}));
     }
 
     render() {
+        
+
         return (
             <div className="login">
                 <div className="container">
