@@ -1,0 +1,4 @@
+mongodb://heroku_bxvknww9:han1k01tm800tt5lb7ej5o9j65@ds113522.mlab.com:13522/heroku_bxvknww9
+
+npm install -g create-react-app
+
