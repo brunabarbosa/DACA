@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import axios from 'axios';
 
 class Login extends Component {
 
@@ -21,13 +22,12 @@ class Login extends Component {
 
     onSubmit(e) {
         e.preventDefault();
+        
+        console.log({email: this.state.email, password: this.state.password});
 
-        const loggedUser = {
-            email: this.state.email,
-            password: this.state.password
-        };
-
-        console.log(loggedUser);
+        axios.post('/users/login', {email: this.state.email, password: this.state.password})
+        .then(res => console.log(res))
+        .catch(err => console.log(err));
     }
 
     render() {
