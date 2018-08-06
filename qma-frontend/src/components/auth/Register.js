@@ -1,6 +1,9 @@
-import React, { Component } from 'react'
-import axios from 'axios';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import  {withRouter} from 'react-router-dom';
 import classnames from 'classnames';
+import {connect} from 'react-redux';
+import {registerUser} from '../../actions/authActions';
 
 class Register extends Component {
 
@@ -10,11 +13,18 @@ class Register extends Component {
             name: '',
             email: '',
             password: '',
-            hasError: false
+            hasError: false,
+            errors: {}
         };
 
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.errors) {
+            this.setState({errors: nextProps.errors});
+        }
     }
 
     onChange(e) {
@@ -26,63 +36,52 @@ class Register extends Component {
 
         console.log({email: this.state.email, password: this.state.password});
 
-        axios.post('/users', {email: this.state.email, password: this.state.password})
-            .then((res) => {
-                this.setState({ hasError: false });
-                 console.log(res);
-            })
-            .catch(err => this.setState({ hasError: true }));
-            
+        var user = {   
+            email: this.state.email, 
+            password: this.state.password
+        };
+
+        this.props.registerUser(user, this.props.history);
+   
     }
 
     render() {
         
+        const {errors} = this.state;
+
         return (
             <div className="register">
                 <div className="container">
                     <div className="row">
                         <div className="col-md-8 m-auto">
                             <h1 className="display-4 text-center">Sign Up</h1>
-                            <p className="lead text-center">Create your DevConnector account</p>
+                            <p className="lead text-center">Create your account</p>
                             <form onSubmit={this.onSubmit}>
-                                <div className="form-group">
-                                    <input 
-                                        type="text"
-                                        className={classnames('form-control form-control-lg', {
-                                            'is-invalid': (this.state.hasError && !this.state.name)   
-                                        })} 
-                                        placeholder="Name" 
-                                        name="name" 
-                                        value={this.state.name}
-                                        onChange={this.onChange}
-                                    />
-                                    {!this.state.name && (<div className="invalid-feedback">Name is empty</div>)}
-                                </div>
                                 <div className="form-group">
                                     <input 
                                         type="email"
                                         className={classnames('form-control form-control-lg', {
-                                            'is-invalid': (this.state.hasError && !this.state.email)  
+                                            'is-invalid': errors.email
                                         })}
                                         placeholder="Email Address"
                                         value={this.state.email}
                                         onChange={this.onChange} 
                                         name="email" 
                                     />
-                                    {!this.state.email && (<div className="invalid-feedback">Email is empty</div>)}
+                                    {errors.email && (<div className="invalid-feedback">Email is empty</div>)}
                                 </div>
                                 <div className="form-group">
                                     <input 
                                         type="password" 
                                         className={classnames('form-control form-control-lg', {
-                                            'is-invalid': (this.state.hasError && !this.state.password)   
+                                            'is-invalid': errors.password
                                         })}
                                         placeholder="Password"
                                         value={this.state.password}
                                         onChange={this.onChange}  
                                         name="password" 
                                     />
-                                    {!this.state.password && (<div className="invalid-feedback">Password is empty</div>)}
+                                    {errors.password && (<div className="invalid-feedback">Password is empty</div>)}
                                 </div>
                                 <input type="submit" className="btn btn-info btn-block mt-4" />
                             </form>
@@ -94,4 +93,15 @@ class Register extends Component {
     }
 }
 
-export default Register;
+Register.propTypes = {
+    registerUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+    errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = (state) => ({
+    auth: state.auth,
+    errors: state.errors
+});
+
+export default connect(mapStateToProps, {registerUser})(withRouter(Register));
